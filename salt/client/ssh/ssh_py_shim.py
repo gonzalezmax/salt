@@ -316,7 +316,7 @@ def main(argv):  # pylint: disable=W0613
             )
             need_deployment()
         with open(code_checksum_path, "r", encoding="utf-8") as vpo:
-            cur_code_cs = vpo.readline().strip()
+            cur_code_cs = vpo.readline(5_000_000).strip()
         if cur_code_cs != OPTIONS.code_checksum:
             sys.stderr.write(
                 "WARNING: current code checksum {0} is different to {1}.\n".format(
@@ -342,7 +342,7 @@ def main(argv):  # pylint: disable=W0613
             if not os.path.exists(version_path) or not os.path.isfile(version_path):
                 need_ext()
             with open(version_path, "r", encoding="utf-8") as vpo:
-                cur_version = vpo.readline().strip()
+                cur_version = vpo.readline(5_000_000).strip()
             if cur_version != OPTIONS.ext_mods:
                 need_ext()
     # Fix parameter passing issue
