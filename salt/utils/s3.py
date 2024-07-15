@@ -13,6 +13,7 @@ import salt.utils.files
 import salt.utils.hashutils
 import salt.utils.xmlutil as xml
 from salt.exceptions import CommandExecutionError
+import defusedxml.ElementTree
 
 try:
     import requests
@@ -215,7 +216,7 @@ def query(
 
         # Try to get err info from response xml
         try:
-            err_data = xml.to_dict(ET.fromstring(err_text))
+            err_data = xml.to_dict(defusedxml.ElementTree.fromstring(err_text))
             err_code = err_data["Code"]
             err_msg = err_data["Message"]
         except (KeyError, ET.ParseError) as err:
@@ -282,7 +283,7 @@ def query(
         return result.content
 
     if result.content:
-        items = ET.fromstring(result.content)
+        items = defusedxml.ElementTree.fromstring(result.content)
 
         ret = []
         for item in items:

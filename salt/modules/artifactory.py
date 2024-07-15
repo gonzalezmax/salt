@@ -6,13 +6,13 @@ import http.client
 import logging
 import os
 import urllib.request
-import xml.etree.ElementTree as ET
 from urllib.error import HTTPError, URLError
 
 import salt.utils.files
 import salt.utils.hashutils
 import salt.utils.stringutils
 from salt.exceptions import CommandExecutionError
+import defusedxml.ElementTree
 
 log = logging.getLogger(__name__)
 
@@ -522,7 +522,7 @@ def _get_artifact_metadata(
         artifact_id=artifact_id,
         use_literal_group_id=use_literal_group_id,
     )
-    root = ET.fromstring(metadata_xml)
+    root = defusedxml.ElementTree.fromstring(metadata_xml)
 
     assert group_id == root.find("groupId").text
     assert artifact_id == root.find("artifactId").text
@@ -594,7 +594,7 @@ def _get_snapshot_version_metadata(
         artifact_id=artifact_id,
         version=version,
     )
-    metadata = ET.fromstring(metadata_xml)
+    metadata = defusedxml.ElementTree.fromstring(metadata_xml)
 
     assert group_id == metadata.find("groupId").text
     assert artifact_id == metadata.find("artifactId").text

@@ -19,7 +19,6 @@ import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
 import zlib
 
 import tornado.httpclient
@@ -44,6 +43,7 @@ import salt.utils.yaml
 import salt.version
 from salt.template import compile_template
 from salt.utils.decorators.jinja import jinja_filter
+import defusedxml.ElementTree
 
 try:
     from ssl import CertificateError, match_hostname
@@ -752,7 +752,7 @@ def query(
             ret["dict"] = salt.utils.json.loads(result_text)
         elif decode_type == "xml":
             ret["dict"] = []
-            items = ET.fromstring(result_text)
+            items = defusedxml.ElementTree.fromstring(result_text)
             for item in items:
                 ret["dict"].append(xml.to_dict(item))
         elif decode_type == "yaml":

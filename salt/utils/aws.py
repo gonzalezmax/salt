@@ -17,7 +17,6 @@ import random
 import re
 import time
 import urllib.parse
-import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import requests
@@ -25,6 +24,7 @@ import requests
 import salt.config
 import salt.utils.hashutils
 import salt.utils.xmlutil as xml
+import defusedxml.ElementTree
 
 log = logging.getLogger(__name__)
 
@@ -523,7 +523,7 @@ def query(
             result.raise_for_status()
             break
         except requests.exceptions.HTTPError as exc:
-            root = ET.fromstring(exc.response.content)
+            root = defusedxml.ElementTree.fromstring(exc.response.content)
             data = xml.to_dict(root)
 
             # check to see if we should retry the query
@@ -561,7 +561,7 @@ def query(
             return {"error": data}, requesturl
         return {"error": data}
 
-    root = ET.fromstring(result.text)
+    root = defusedxml.ElementTree.fromstring(result.text)
     items = root[1]
     if return_root is True:
         items = root

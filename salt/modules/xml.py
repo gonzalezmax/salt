@@ -5,7 +5,7 @@ XML file manager
 """
 
 import logging
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree
 
 log = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ def get_value(file, element):
         salt '*' xml.get_value /tmp/test.xml ".//element"
     """
     try:
-        root = ET.parse(file)
+        root = defusedxml.ElementTree.parse(file)
         element = root.find(element)
         return element.text
     except AttributeError:
@@ -51,7 +51,7 @@ def set_value(file, element, value):
         salt '*' xml.set_value /tmp/test.xml ".//element" "new value"
     """
     try:
-        root = ET.parse(file)
+        root = defusedxml.ElementTree.parse(file)
         relement = root.find(element)
     except AttributeError:
         log.error("Unable to find element matching %s", element)
@@ -72,7 +72,7 @@ def get_attribute(file, element):
         salt '*' xml.get_attribute /tmp/test.xml ".//element[@id='3']"
     """
     try:
-        root = ET.parse(file)
+        root = defusedxml.ElementTree.parse(file)
         element = root.find(element)
         return element.attrib
     except AttributeError:
@@ -91,7 +91,7 @@ def set_attribute(file, element, key, value):
         salt '*' xml.set_attribute /tmp/test.xml ".//element[@id='3']" editedby "gal"
     """
     try:
-        root = ET.parse(file)
+        root = defusedxml.ElementTree.parse(file)
         element = root.find(element)
     except AttributeError:
         log.error("Unable to find element matching %s", element)

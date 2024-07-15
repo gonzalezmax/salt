@@ -16,9 +16,9 @@
 """
 
 import logging
-import xml.dom.minidom
 
 import salt.loader
+import defusedxml.minidom
 
 try:
     import requests
@@ -63,7 +63,7 @@ def _handle_request(r):
         log.error(str(r))
         raise Exception(str(r))
 
-    response_xml = xml.dom.minidom.parseString(r.text)
+    response_xml = defusedxml.minidom.parseString(r.text)
     apiresponse = response_xml.getElementsByTagName("ApiResponse")[0]
 
     if apiresponse.getAttribute("Status") == "ERROR":

@@ -14,6 +14,7 @@ import xml.etree.ElementTree
 import salt.utils.platform
 import salt.utils.versions
 from salt.exceptions import CommandExecutionError
+import defusedxml.ElementTree
 
 # Set up logging
 log = logging.getLogger(__name__)
@@ -98,7 +99,7 @@ def _pshell(cmd, cwd=None, depth=2):
 
     try:
         ret = _ps_xml_to_dict(
-            xml.etree.ElementTree.fromstring(results["stdout"].encode("utf-8"))
+            defusedxml.ElementTree.fromstring(results["stdout"].encode("utf-8"))
         )
     except xml.etree.ElementTree.ParseError:
         results["stdout"] = results["stdout"][:1000] + ". . ."
