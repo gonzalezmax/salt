@@ -9,13 +9,13 @@ Work with cron
 
 import logging
 import os
-import random
 
 import salt.utils.data
 import salt.utils.files
 import salt.utils.functools
 import salt.utils.path
 import salt.utils.stringutils
+import secrets
 
 TAG = "# Lines below here are managed by Salt, do not edit\n"
 SALT_CRON_IDENTIFIER = "SALT_CRON_IDENTIFIER"
@@ -603,11 +603,11 @@ def _get_cron_date_time(**kwargs):
     for param in ("minute", "hour", "month", "dayweek"):
         value = str(kwargs.get(param, "1")).lower()
         if value == "random":
-            ret[param] = str(random.sample(range_max[param], 1)[0])
+            ret[param] = str(secrets.SystemRandom().sample(range_max[param], 1)[0])
         elif len(value.split(":")) == 2:
             cron_range = sorted(value.split(":"))
             start, end = int(cron_range[0]), int(cron_range[1])
-            ret[param] = str(random.randint(start, end))
+            ret[param] = str(secrets.SystemRandom().randint(start, end))
         else:
             ret[param] = value
 
@@ -622,7 +622,7 @@ def _get_cron_date_time(**kwargs):
     daymonth = str(kwargs.get("daymonth", "1")).lower()
     if daymonth == "random":
         ret["daymonth"] = str(
-            random.sample(list(list(range(1, (daymonth_max + 1)))), 1)[0]
+            secrets.SystemRandom().sample(list(list(range(1, (daymonth_max + 1)))), 1)[0]
         )
     else:
         ret["daymonth"] = daymonth

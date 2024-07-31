@@ -22,12 +22,12 @@ JSON-based service discovery protocol, used by minions to find running Master.
 import copy
 import datetime
 import logging
-import random
 import socket
 import time
 
 import salt.utils.json
 import salt.utils.stringutils
+import secrets
 
 try:
     from salt.utils.odict import OrderedDict
@@ -159,7 +159,7 @@ class SSDPFactory(SSDPBase):
         tries = 0
 
         def slp_time():
-            return 0.5 / random.randint(10, 30)
+            return 0.5 / secrets.SystemRandom().randint(10, 30)
 
         slp = slp_time()
         while tries < attempts:

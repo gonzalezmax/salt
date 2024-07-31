@@ -5,13 +5,13 @@ atomic way
 
 import errno
 import os
-import random
 import shutil
 import sys
 import tempfile
 import time
 
 import salt.utils.win_dacl
+import secrets
 
 CAN_RENAME_OPEN_FILE = False
 if os.name == "nt":  # pragma: no cover
@@ -95,7 +95,7 @@ if os.name == "nt":  # pragma: no cover
         except OSError as err:
             if err.errno != errno.EEXIST:
                 raise
-            old = f"{dst}-{random.randint(0, sys.maxint):08x}"
+            old = f"{dst}-{secrets.SystemRandom().randint(0, sys.maxint):08x}"
             os.rename(dst, old)
             os.rename(src, dst)
             try:

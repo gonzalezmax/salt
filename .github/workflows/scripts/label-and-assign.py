@@ -4,11 +4,11 @@ import json
 import operator
 import os
 import pathlib
-import random
 import sys
 
 import github
 from github.GithubException import GithubException
+import secrets
 
 CACHE_FILENAME = pathlib.Path(".cache", "last-user-assigned")
 
@@ -35,7 +35,7 @@ def get_triage_next_account(options):
     team_members = get_team_members(options)
     last_account_assigned = get_last_account_assigned()
     if last_account_assigned is None:
-        return random.choice(team_members)
+        return secrets.choice(team_members)
 
     previous_account = None
     for member in team_members:
@@ -45,7 +45,7 @@ def get_triage_next_account(options):
     else:
         # The previously assigned account is not longer part of the team members
         # or the team was switched
-        return random.choice(team_members)
+        return secrets.choice(team_members)
 
 
 def label_and_assign_issue(options):

@@ -7,7 +7,6 @@ import datetime
 import hashlib
 import logging
 import os
-import random
 import re
 import socket
 import time
@@ -19,6 +18,7 @@ import salt.utils.platform
 import salt.utils.validate.net
 from salt._compat import ipaddress
 from salt.exceptions import CommandExecutionError
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -2148,7 +2148,7 @@ def fqdns():
         # the GLIBC race condition.
         # For more info, see:
         #   https://sourceware.org/bugzilla/show_bug.cgi?id=19329
-        time.sleep(random.randint(5, 25) / 1000)
+        time.sleep(secrets.SystemRandom().randint(5, 25) / 1000)
         try:
             return [socket.getfqdn(socket.gethostbyaddr(ip)[0])]
         except socket.herror as err:

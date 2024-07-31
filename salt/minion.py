@@ -9,7 +9,6 @@ import copy
 import logging
 import multiprocessing
 import os
-import random
 import signal
 import stat
 import sys
@@ -80,6 +79,7 @@ from salt.utils.network import parse_host_port
 from salt.utils.odict import OrderedDict
 from salt.utils.process import ProcessManager, SignalHandlingProcess, default_signals
 from salt.utils.zeromq import ZMQ_VERSION_INFO, zmq
+import secrets
 
 try:
     import psutil
@@ -674,10 +674,10 @@ class MinionBase:
                 # master_failback is only used when master_type is set to failover
                 if opts["master_type"] == "failover" and opts["master_failback"]:
                     secondary_masters = opts["local_masters"][1:]
-                    random.shuffle(secondary_masters)
+                    secrets.SystemRandom().shuffle(secondary_masters)
                     opts["local_masters"][1:] = secondary_masters
                 else:
-                    random.shuffle(opts["local_masters"])
+                    secrets.SystemRandom().shuffle(opts["local_masters"])
 
             # This sits outside of the connection loop below because it needs to set
             # up a list of master URIs regardless of which masters are available
@@ -886,8 +886,7 @@ class MinionBase:
         msg = "Minion return retry timer set to %s seconds"
         if self.opts.get("return_retry_timer_max"):
             try:
-                random_retry = random.randint(
-                    self.opts["return_retry_timer"], self.opts["return_retry_timer_max"]
+                random_retry = secrets.SystemRandom().randint(self.opts["return_retry_timer"], self.opts["return_retry_timer_max"]
                 )
                 retry_msg = msg % random_retry
                 log.debug("%s (randomized)", msg % random_retry)
@@ -1304,7 +1303,7 @@ class Minion(MinionBase):
         log.info("Creating minion process manager")
 
         if self.opts["random_startup_delay"]:
-            sleep_time = random.randint(0, self.opts["random_startup_delay"])
+            sleep_time = secrets.SystemRandom().randint(0, self.opts["random_startup_delay"])
             log.info(
                 "Minion sleeping for %s seconds due to configured "
                 "startup_delay between 0 and %s seconds",
@@ -3648,7 +3647,7 @@ class SyndicManager(MinionBase):
         """
         masters = list(self._syndics.keys())
         if self.opts["syndic_failover"] == "random":
-            random.shuffle(masters)
+            secrets.SystemRandom().shuffle(masters)
         if master_id not in self._syndics:
             master_id = masters.pop(0)
         else:

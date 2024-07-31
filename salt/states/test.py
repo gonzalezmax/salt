@@ -63,11 +63,10 @@ pillar or grains do not apply. The following state definition will fail with a m
 
 """
 
-import random
-
 import salt.utils.data
 from salt.exceptions import SaltInvocationError
 from salt.state import _gen_tag
+import secrets
 
 
 def nop(name, **kwargs):
@@ -251,7 +250,7 @@ def configurable_test_state(
         pass
     else:
         if str(changes).lower() == "random":
-            if random.choice((True, False)):
+            if secrets.choice((True, False)):
                 # Following the docs as written here
                 # https://docs.saltproject.io/ref/states/writing.html#return-data
                 ret["changes"] = change_data
@@ -267,7 +266,7 @@ def configurable_test_state(
         ret["result"] = result
     else:
         if str(result).lower() == "random":
-            ret["result"] = random.choice((True, False))
+            ret["result"] = secrets.choice((True, False))
         else:
             raise SaltInvocationError(
                 "You have specified the state option "

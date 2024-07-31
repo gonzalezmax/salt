@@ -25,7 +25,6 @@ import glob
 import hashlib
 import logging
 import os
-import random
 import re
 import sys
 import tempfile
@@ -39,6 +38,7 @@ import salt.utils.stringutils
 import salt.utils.versions
 from salt.state import STATE_INTERNAL_KEYWORDS as _STATE_INTERNAL_KEYWORDS
 from salt.utils.odict import OrderedDict
+import secrets
 
 try:
     import M2Crypto
@@ -1515,7 +1515,7 @@ def create_certificate(path=None, text=False, overwrite=True, ca_server=None, **
 
     # Random serial number if not specified
     if "serial_number" not in kwargs:
-        kwargs["serial_number"] = _dec2hex(random.getrandbits(kwargs["serial_bits"]))
+        kwargs["serial_number"] = _dec2hex(secrets.SystemRandom().getrandbits(kwargs["serial_bits"]))
     serial_number = int(kwargs["serial_number"].replace(":", ""), 16)
     # With Python3 we occasionally end up with an INT that is greater than a C
     # long max_value. This causes an overflow error due to a bug in M2Crypto.

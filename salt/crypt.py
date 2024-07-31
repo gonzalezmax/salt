@@ -13,7 +13,6 @@ import hmac
 import logging
 import os
 import pathlib
-import random
 import stat
 import sys
 import tempfile
@@ -44,6 +43,7 @@ from salt.exceptions import (
     SaltClientError,
     SaltReqTimeoutError,
 )
+import secrets
 
 try:
     from M2Crypto import BIO, EVP, RSA
@@ -1020,7 +1020,7 @@ class AsyncAuth:
                     # Add a random sleep here for systems that are using a
                     # service manager to immediately restart the service to
                     # avoid overloading the system
-                    time.sleep(random.randint(10, 20))
+                    time.sleep(secrets.SystemRandom().randint(10, 20))
                     sys.exit(salt.defaults.exitcodes.EX_NOPERM)
             # Has the master returned that it's maxed out with minions?
             elif payload["ret"] == "full":

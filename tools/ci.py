@@ -9,7 +9,6 @@ import json
 import logging
 import os
 import pathlib
-import random
 import shutil
 import sys
 import time
@@ -21,6 +20,7 @@ from ptscripts import Context, command_group
 import tools.utils
 import tools.utils.gh
 from tools.precommit.workflows import TEST_SALT_LISTING
+import secrets
 
 if sys.version_info < (3, 11):
     from typing_extensions import NotRequired, TypedDict
@@ -1478,14 +1478,14 @@ def define_cache_seed(ctx: Context, static_cache_seed: str, randomize: bool = Fa
         )
 
     if randomize is True:
-        cache_seed = f"SEED-{random.randint(100, 1000)}"
+        cache_seed = f"SEED-{secrets.SystemRandom().randint(100, 1000)}"
         with open(github_step_summary, "a", encoding="utf-8") as wfh:
             wfh.write(
                 f"The cache seed has been randomized to `{cache_seed}` because "
                 "`--randomize` was passed to `tools ci define-cache-seed`."
             )
     elif "test:random-cache-seed" in labels:
-        cache_seed = f"SEED-{random.randint(100, 1000)}"
+        cache_seed = f"SEED-{secrets.SystemRandom().randint(100, 1000)}"
         with open(github_step_summary, "a", encoding="utf-8") as wfh:
             wfh.write(
                 f"The cache seed has been randomized to `{cache_seed}` because "

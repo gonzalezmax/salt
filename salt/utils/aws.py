@@ -13,7 +13,6 @@ import copy
 import hashlib
 import hmac
 import logging
-import random
 import re
 import time
 import urllib.parse
@@ -25,6 +24,7 @@ import requests
 import salt.config
 import salt.utils.hashutils
 import salt.utils.xmlutil as xml
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ def sleep_exponential_backoff(attempts):
     A failure rate of >10% is observed when using the salt-api with an asynchronous client
     specified (runner_async).
     """
-    time.sleep(random.uniform(1, 2**attempts))
+    time.sleep(secrets.SystemRandom().uniform(1, 2**attempts))
 
 
 def get_metadata(path, refresh_token_if_needed=True):

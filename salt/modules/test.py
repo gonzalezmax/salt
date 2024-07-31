@@ -5,7 +5,6 @@ Module for running arbitrary tests
 import builtins
 import logging
 import os
-import random
 import sys
 import time
 import traceback
@@ -20,6 +19,7 @@ import salt.utils.versions
 import salt.version
 from salt.config import DEFAULT_HASH_TYPE
 from salt.utils.decorators import depends
+import secrets
 
 __proxyenabled__ = ["*"]
 
@@ -155,7 +155,7 @@ def rand_sleep(max=60):
 
         salt '*' test.rand_sleep 60
     """
-    time.sleep(random.randint(0, max))
+    time.sleep(secrets.SystemRandom().randint(0, max))
     return True
 
 

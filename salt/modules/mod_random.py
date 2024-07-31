@@ -7,11 +7,11 @@ Provides access to randomness generators.
 """
 
 import base64
-import random
 
 import salt.utils.data
 import salt.utils.pycrypto
 from salt.exceptions import SaltInvocationError
+import secrets
 
 # Define the module's virtual name
 __virtualname__ = "random"
@@ -230,8 +230,8 @@ def rand_int(start=1, end=10, seed=None):
         salt '*' random.rand_int 1 10
     """
     if seed is not None:
-        random.seed(seed)
-    return random.randint(start, end)
+        secrets.SystemRandom().seed(seed)
+    return secrets.SystemRandom().randint(start, end)
 
 
 def seed(range=10, hash=None):
@@ -256,8 +256,8 @@ def seed(range=10, hash=None):
     if hash is None:
         hash = __grains__["id"]
 
-    random.seed(hash)
-    return random.randrange(range)
+    secrets.SystemRandom().seed(hash)
+    return secrets.SystemRandom().randrange(range)
 
 
 def sample(value, size, seed=None):

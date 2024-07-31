@@ -17,7 +17,6 @@ import errno
 import itertools
 import logging
 import os
-import random
 import signal
 import sys
 import threading
@@ -45,6 +44,7 @@ import salt.utils.user
 import salt.utils.yaml
 from salt.exceptions import SaltInvocationError
 from salt.utils.odict import OrderedDict
+import secrets
 
 # pylint: disable=import-error
 try:
@@ -1001,14 +1001,14 @@ class Schedule:
             splay_ = None
             if isinstance(splaytime, dict):
                 if splaytime["end"] >= splaytime["start"]:
-                    splay_ = random.randint(splaytime["start"], splaytime["end"])
+                    splay_ = secrets.SystemRandom().randint(splaytime["start"], splaytime["end"])
                 else:
                     log.error(
                         "schedule.handle_func: Invalid Splay, "
                         "end must be larger than start. Ignoring splay."
                     )
             else:
-                splay_ = random.randint(1, splaytime)
+                splay_ = secrets.SystemRandom().randint(1, splaytime)
             return splay_
 
         def _handle_time_elements(data):

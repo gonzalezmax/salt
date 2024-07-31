@@ -9,7 +9,6 @@ import itertools
 import logging
 import os
 import platform
-import random
 import re
 import shutil
 import socket
@@ -27,6 +26,7 @@ from salt._compat import ipaddress
 from salt.exceptions import SaltClientError, SaltSystemExit
 from salt.utils.decorators.jinja import jinja_filter
 from salt.utils.versions import Version
+import secrets
 
 try:
     import salt.utils.win_network
@@ -2119,9 +2119,9 @@ def gen_mac(prefix="AC:DE:48"):
     """
     return "{}:{:02X}:{:02X}:{:02X}".format(
         prefix,
-        random.randint(0, 0xFF),
-        random.randint(0, 0xFF),
-        random.randint(0, 0xFF),
+        secrets.SystemRandom().randint(0, 0xFF),
+        secrets.SystemRandom().randint(0, 0xFF),
+        secrets.SystemRandom().randint(0, 0xFF),
     )
 
 

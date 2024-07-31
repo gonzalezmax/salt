@@ -16,7 +16,6 @@ import functools
 import hashlib
 import itertools
 import logging
-import random
 import re
 import shlex
 import socket
@@ -30,6 +29,7 @@ import salt.utils.path
 import salt.utils.stringutils
 from salt._compat import ipaddress
 from salt.utils.odict import OrderedDict
+import secrets
 
 # Integrations
 try:
@@ -169,7 +169,7 @@ def _weighted_order(recs):
     res = []
     weights = [rec["weight"] for rec in recs]
     while weights:
-        rnd = random.random() * sum(weights)
+        rnd = secrets.SystemRandom().random() * sum(weights)
         for i, w in enumerate(weights):
             rnd -= w
             if rnd < 0:

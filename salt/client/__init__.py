@@ -19,7 +19,6 @@ import logging
 # 3. What arguments need to be passed to the function?
 # 4. How long do we wait for all of the replies?
 import os
-import random
 import sys
 import time
 from datetime import datetime
@@ -52,6 +51,7 @@ from salt.exceptions import (
     SaltInvocationError,
     SaltReqTimeoutError,
 )
+import secrets
 
 HAS_RANGE = False
 try:
@@ -534,7 +534,7 @@ class LocalClient:
 
         minion_ret = self.cmd(tgt, "sys.list_functions", tgt_type=tgt_type, **kwargs)
         minions = list(minion_ret)
-        random.shuffle(minions)
+        secrets.SystemRandom().shuffle(minions)
         f_tgt = []
         for minion in minions:
             if fun in minion_ret[minion]:

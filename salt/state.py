@@ -18,7 +18,6 @@ import importlib
 import inspect
 import logging
 import os
-import random
 import re
 import site
 import time
@@ -52,6 +51,7 @@ from salt.serializers.msgpack import deserialize as msgpack_deserialize
 from salt.serializers.msgpack import serialize as msgpack_serialize
 from salt.template import compile_template, compile_template_str
 from salt.utils.odict import DefaultOrderedDict, OrderedDict
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -2194,7 +2194,7 @@ class State:
 
                     interval = low["retry"]["interval"]
                     if low["retry"]["splay"] != 0:
-                        interval = interval + random.randint(0, low["retry"]["splay"])
+                        interval = interval + secrets.SystemRandom().randint(0, low["retry"]["splay"])
                     log.info(
                         "State result does not match retry until value, "
                         "state will be re-run in %s seconds",
@@ -2508,8 +2508,7 @@ class State:
                     if low["retry"]["attempts"] > retries:
                         interval = low["retry"]["interval"]
                         if low["retry"]["splay"] != 0:
-                            interval = interval + random.randint(
-                                0, low["retry"]["splay"]
+                            interval = interval + secrets.SystemRandom().randint(0, low["retry"]["splay"]
                             )
                         log.info(
                             "State result does not match retry until value, "

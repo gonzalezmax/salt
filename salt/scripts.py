@@ -12,10 +12,10 @@ import sys
 import threading
 import time
 import traceback
-from random import randint
 
 import salt.defaults.exitcodes
 from salt.exceptions import SaltClientError, SaltReqTimeoutError, SaltSystemExit
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ def minion_process():
         delay = 60
         if minion is not None and hasattr(minion, "config"):
             delay = minion.config.get("random_reauth_delay", 60)
-        delay = randint(1, delay)
+        delay = secrets.SystemRandom().randint(1, delay)
         log.info("waiting random_reauth_delay %ss", delay)
         time.sleep(delay)
         sys.exit(salt.defaults.exitcodes.SALT_KEEPALIVE)
@@ -240,7 +240,7 @@ def salt_minion():
         # ontop of the random_reauth_delay already preformed
         # delay extra to reduce flooding and free resources
         # NOTE: values are static but should be fine.
-        time.sleep(2 + randint(1, 10))
+        time.sleep(2 + secrets.SystemRandom().randint(1, 10))
         # need to reset logging because new minion objects
         # cause extra log handlers to accumulate
         rlogger = logging.getLogger()
@@ -314,7 +314,7 @@ def proxy_minion_process(queue):
         if proxyminion is not None:
             if hasattr(proxyminion, "config"):
                 delay = proxyminion.config.get("random_reauth_delay", 60)
-        random_delay = randint(1, delay)
+        random_delay = secrets.SystemRandom().randint(1, delay)
         log.info("Sleeping random_reauth_delay of %s seconds", random_delay)
         # preform delay after minion resources have been cleaned
         queue.put(random_delay)

@@ -11,7 +11,6 @@ import os
 import signal
 import sys
 import threading
-from random import randint
 
 import tornado
 import tornado.concurrent
@@ -32,6 +31,7 @@ import salt.utils.zeromq
 from salt._compat import ipaddress
 from salt.exceptions import SaltException, SaltReqTimeoutError
 from salt.utils.zeromq import LIBZMQ_VERSION_INFO, ZMQ_VERSION_INFO, zmq
+import secrets
 
 try:
     import zmq.utils.monitor
@@ -167,8 +167,7 @@ class PublishClient(salt.transport.base.PublishClient):
             self._socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, tcp_keepalive_intvl)
 
         if recon_randomize:
-            recon_delay = randint(
-                recon_default,
+            recon_delay = secrets.SystemRandom().randint(recon_default,
                 recon_default + recon_max,
             )
 

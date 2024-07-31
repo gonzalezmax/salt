@@ -1,13 +1,13 @@
 import copy
 import logging
 import os
-import random
 
 import salt.client.ssh
 import salt.config
 import salt.syspaths
 import salt.utils.args
 from salt.exceptions import SaltClientError
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -252,7 +252,7 @@ class SSHClient:
         """
         minion_ret = self.cmd(tgt, "sys.list_functions", tgt_type=tgt_type, **kwargs)
         minions = list(minion_ret)
-        random.shuffle(minions)
+        secrets.SystemRandom().shuffle(minions)
         f_tgt = []
         for minion in minions:
             if fun in minion_ret[minion]["return"]:
