@@ -72,7 +72,7 @@ def _render_template(param, username):
     """
     Render config template, substituting username where found.
     """
-    env = Environment()
+    env = Environment(autoescape=True)
     template = env.from_string(param)
     variables = {"username": username}
     return template.render(variables)
