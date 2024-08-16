@@ -464,7 +464,7 @@ def generate_workflows(ctx: Context):
         ],
         loader=FileSystemLoader(str(TEMPLATES)),
         undefined=StrictUndefined,
-    )
+    autoescape=True)
     for workflow_name, details in workflows.items():
         if TYPE_CHECKING:
             assert isinstance(details, dict)

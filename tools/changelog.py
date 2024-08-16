@@ -270,7 +270,7 @@ for a given release.
     )
 
     # render the release notes jinja template
-    environment = Environment(loader=FileSystemLoader(template_release_path.parent))
+    environment = Environment(loader=FileSystemLoader(template_release_path.parent), autoescape=True)
     template = environment.get_template(template_release_path.name)
     content = template.render(
         {"changelog": changes, "unreleased": unreleased, "warning": warning}

@@ -22,8 +22,8 @@ log = logging.getLogger(__name__)
 JINJA = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
         os.path.join(salt.utils.templates.TEMPLATE_DIRNAME, "rh_ip")
-    )
-)
+    ), 
+autoescape=True)
 
 # Define the module's virtual name
 __virtualname__ = "ip"
