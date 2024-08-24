@@ -44,6 +44,7 @@ from salt.utils.event import tagify
 from salt.utils.odict import OrderedDict
 from salt.utils.process import os_is_running as pid_exists
 from salt.utils.versions import Version
+from security import safe_command
 
 VALID_REF_TYPES = _DEFAULT_MASTER_OPTS["gitfs_ref_types"]
 
@@ -686,8 +687,7 @@ class GitProvider:
             env[b"LANGUAGE"] = b"C"
             env[b"LC_ALL"] = b"C"
 
-        cmd = subprocess.Popen(
-            shlex.split(cmd_str),
+        cmd = safe_command.run(subprocess.Popen, shlex.split(cmd_str),
             close_fds=not salt.utils.platform.is_windows(),
             cwd=os.path.dirname(self.gitdir),
             env=env,

@@ -9,6 +9,7 @@ import salt.utils.args
 import salt.utils.data
 import salt.utils.winapi
 from salt.exceptions import CommandExecutionError
+from security import safe_command
 
 try:
     import pywintypes
@@ -1118,7 +1119,7 @@ class WindowsUpdateAgent:
 
         try:
             log.debug(cmd)
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             return p.communicate()
 
         except OSError as exc:

@@ -23,6 +23,7 @@ import salt.utils.path
 import salt.utils.platform
 import salt.utils.stringutils
 from salt.exceptions import CommandExecutionError, SaltInvocationError
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -747,7 +748,7 @@ def set_auth_key(
             rcon = salt.utils.path.which("restorecon")
             if rcon:
                 cmd = [rcon, dpath]
-                subprocess.call(cmd)
+                safe_command.run(subprocess.call, cmd)
 
         if not os.path.isfile(fconfig):
             new_file = True
@@ -779,7 +780,7 @@ def set_auth_key(
             rcon = salt.utils.path.which("restorecon")
             if rcon:
                 cmd = [rcon, fconfig]
-                subprocess.call(cmd)
+                safe_command.run(subprocess.call, cmd)
         return "new"
 
 

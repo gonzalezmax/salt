@@ -33,6 +33,7 @@ import salt.utils.crypt
 import salt.utils.data
 import salt.utils.stringutils
 from salt._logging import LOG_LEVELS
+from security import safe_command
 
 mswindows = sys.platform == "win32"
 
@@ -400,8 +401,7 @@ class Terminal:
             parent, child = pty.openpty()  # pylint: disable=used-before-assignment
             err_parent, err_child = os.pipe()
             child_name = os.ttyname(child)
-            proc = subprocess.Popen(  # pylint: disable=subprocess-popen-preexec-fn
-                self.args,
+            proc = safe_command.run(subprocess.Popen, self.args,
                 preexec_fn=functools.partial(
                     self._preexec, child_name, self.rows, self.cols, self.preexec_fn
                 ),

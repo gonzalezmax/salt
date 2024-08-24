@@ -27,6 +27,7 @@ from salt._compat import ipaddress
 from salt.exceptions import SaltClientError, SaltSystemExit
 from salt.utils.decorators.jinja import jinja_filter
 from salt.utils.versions import Version
+from security import safe_command
 
 try:
     import salt.utils.win_network
@@ -920,14 +921,12 @@ def linux_interfaces():
     ip_path = salt.utils.path.which("ip")
     ifconfig_path = None if ip_path else salt.utils.path.which("ifconfig")
     if ip_path:
-        cmd1 = subprocess.Popen(
-            [ip_path, "link", "show"],
+        cmd1 = safe_command.run(subprocess.Popen, [ip_path, "link", "show"],
             close_fds=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         ).communicate()[0]
-        cmd2 = subprocess.Popen(
-            [ip_path, "addr", "show"],
+        cmd2 = safe_command.run(subprocess.Popen, [ip_path, "addr", "show"],
             close_fds=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -938,8 +937,7 @@ def linux_interfaces():
             )
         )
     elif ifconfig_path:
-        cmd = subprocess.Popen(
-            [ifconfig_path, "-a"],
+        cmd = safe_command.run(subprocess.Popen, [ifconfig_path, "-a"],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         ).communicate()[0]
@@ -1084,8 +1082,7 @@ def junos_interfaces():  # pragma: no cover
     address)
     """
     ifconfig_path = salt.utils.path.which("ifconfig")
-    cmd = subprocess.Popen(
-        [ifconfig_path, "-a"],
+    cmd = safe_command.run(subprocess.Popen, [ifconfig_path, "-a"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     ).communicate()[0]
@@ -1103,8 +1100,7 @@ def netbsd_interfaces():
         return linux_interfaces()
 
     ifconfig_path = salt.utils.path.which("ifconfig")
-    cmd = subprocess.Popen(
-        [ifconfig_path, "-a"],
+    cmd = safe_command.run(subprocess.Popen, [ifconfig_path, "-a"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     ).communicate()[0]

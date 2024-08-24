@@ -19,6 +19,7 @@ from ptscripts import Context, command_group
 
 import tools.utils
 from tools.precommit import SALT_INTERNAL_LOADERS_PATHS
+from security import safe_command
 
 SALT_CODE_DIR = tools.utils.REPO_ROOT / "salt"
 SALT_MODULES_PATH = SALT_CODE_DIR / "modules"
@@ -1086,8 +1087,7 @@ def _check_valid_versions_on_docstrings(docstring):
         versions = [vs.strip() for vs in version.split(",")]
         bad_versions = []
         for vs in versions:
-            ret = subprocess.run(
-                [sys.executable, str(SALT_CODE_DIR / "version.py"), vs], check=False
+            ret = safe_command.run(subprocess.run, [sys.executable, str(SALT_CODE_DIR / "version.py"), vs], check=False
             )
             if ret.returncode:
                 bad_versions.append(vs)

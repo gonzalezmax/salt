@@ -27,6 +27,7 @@ from setuptools.command.bdist_egg import bdist_egg
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 from setuptools.command.sdist import sdist
+from security import safe_command
 
 # pylint: enable=no-name-in-module
 
@@ -530,8 +531,7 @@ class TestCommand(Command):
             test_cmd.extend(self.runtests_opts.split())
 
         print("running test")
-        ret = subprocess.run(
-            test_cmd,
+        ret = safe_command.run(subprocess.run, test_cmd,
             stdout=sys.stdout,
             stderr=sys.stderr,
             cwd=build_cmd.build_lib,

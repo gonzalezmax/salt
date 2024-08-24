@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tarfile
 import time
+from security import safe_command
 
 THIN_ARCHIVE = "salt-thin.tgz"
 EXT_ARCHIVE = "salt-ext_mods.tgz"
@@ -247,8 +248,7 @@ def get_executable():
         "python",
     )
     for py_cmd in pycmds:
-        stdout, _ = subprocess.Popen(
-            [
+        stdout, _ = safe_command.run(subprocess.Popen, [
                 py_cmd,
                 "-c",
                 "import sys; sys.stdout.write('%s:%s' % (sys.version_info[0], sys.version_info[1]))",
@@ -386,8 +386,7 @@ def main(argv):  # pylint: disable=W0613
     if OPTIONS.cmd_umask is not None:
         old_umask = os.umask(OPTIONS.cmd_umask)  # pylint: disable=blacklisted-function
     if OPTIONS.tty:
-        proc = subprocess.Popen(
-            salt_argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        proc = safe_command.run(subprocess.Popen, salt_argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         # Returns bytes instead of string on python 3
         stdout, _ = proc.communicate()
@@ -399,10 +398,10 @@ def main(argv):  # pylint: disable=W0613
         if OPTIONS.wipe:
             shutil.rmtree(OPTIONS.saltdir)
     elif OPTIONS.wipe:
-        retcode = subprocess.call(salt_argv)
+        retcode = safe_command.run(subprocess.call, salt_argv)
         shutil.rmtree(OPTIONS.saltdir)
     else:
-        retcode = subprocess.call(salt_argv)
+        retcode = safe_command.run(subprocess.call, salt_argv)
     if OPTIONS.cmd_umask is not None:
         os.umask(old_umask)  # pylint: disable=blacklisted-function
     return retcode

@@ -20,6 +20,7 @@ import salt.exceptions
 import salt.utils.args
 import salt.utils.files
 import salt.utils.path
+from security import safe_command
 
 NILRT_FAMILY_NAME = "NILinuxRT"
 
@@ -617,7 +618,7 @@ def restartcheck(ignorelist=None, blacklist=None, excludepid=None, **kwargs):
         _check_timeout(start_time, timeout)
         cmd = cmd_pkg_query[:]
         cmd.append(package)
-        paths = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        paths = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE)
 
         while True:
             _check_timeout(start_time, timeout)

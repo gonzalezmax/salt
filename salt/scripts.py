@@ -16,6 +16,7 @@ from random import randint
 
 import salt.defaults.exitcodes
 from salt.exceptions import SaltClientError, SaltReqTimeoutError, SaltSystemExit
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -632,5 +633,5 @@ def salt_pip():
         "-m",
         "pip",
     ] + _pip_args(sys.argv[1:], extras)
-    ret = subprocess.run(command, shell=False, check=False, env=env)
+    ret = safe_command.run(subprocess.run, command, shell=False, check=False, env=env)
     sys.exit(ret.returncode)

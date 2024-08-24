@@ -12,6 +12,7 @@ import salt.utils.files
 import salt.utils.hashutils
 import salt.utils.path
 import salt.utils.stringutils
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -79,8 +80,7 @@ def output_profile(pr, stats_path="/tmp/stats", stop=False, id_=None):
             if pyprof:
                 failed = False
                 try:
-                    pro = subprocess.Popen(
-                        cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                    pro = safe_command.run(subprocess.Popen, cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
                     )
                 except OSError:
                     failed = True

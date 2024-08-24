@@ -97,6 +97,7 @@ import salt.utils.hashutils
 import salt.utils.path
 import salt.utils.stringutils
 from salt.utils.filebuffer import BufferedReader
+from security import safe_command
 
 try:
     import grp
@@ -581,7 +582,7 @@ class ExecOption(Option):
         try:
             command = self.command.replace("{}", fullpath)
             print(salt.utils.args.shlex_split(command))
-            p = Popen(salt.utils.args.shlex_split(command), stdout=PIPE, stderr=PIPE)
+            p = safe_command.run(Popen, salt.utils.args.shlex_split(command), stdout=PIPE, stderr=PIPE)
             (out, err) = p.communicate()
             if err:
                 log.error(
