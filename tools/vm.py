@@ -37,6 +37,7 @@ from rich.progress import (
 )
 
 import tools.utils
+from security import safe_command
 
 if TYPE_CHECKING:
     # pylint: disable=no-name-in-module
@@ -1209,8 +1210,7 @@ class VM:
                 if proc is None:
                     checks = 0
                     stderr = None
-                    proc = subprocess.Popen(
-                        self.ssh_command_args(
+                    proc = safe_command.run(subprocess.Popen, self.ssh_command_args(
                             "exit",
                             "0",
                             log_command_level=logging.DEBUG,
@@ -1596,7 +1596,7 @@ class VM:
         if sys.platform == "win32":
             cmd = [" ".join(cmd)]
         with progress:
-            proc = subprocess.Popen(cmd, bufsize=1, stdout=subprocess.PIPE, text=True)
+            proc = safe_command.run(subprocess.Popen, cmd, bufsize=1, stdout=subprocess.PIPE, text=True)
             completed = 0
             while proc.poll() is None:
                 if TYPE_CHECKING:

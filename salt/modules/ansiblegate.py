@@ -31,6 +31,7 @@ import salt.utils.stringutils
 import salt.utils.timed_subprocess
 import salt.utils.yaml
 from salt.exceptions import CommandExecutionError
+from security import safe_command
 
 # Function alias to make sure not to shadow built-in's
 __func_alias__ = {"list_": "list"}
@@ -99,8 +100,7 @@ def __virtual__():
     env = os.environ.copy()
     env["ANSIBLE_DEPRECATION_WARNINGS"] = "0"
 
-    proc = subprocess.run(
-        [ansible_doc_bin, "--list", "--json", "--type=module"],
+    proc = safe_command.run(subprocess.run, [ansible_doc_bin, "--list", "--json", "--type=module"],
         capture_output=True,
         check=False,
         shell=False,
@@ -167,8 +167,7 @@ def help(module=None, *args):
     env = os.environ.copy()
     env["ANSIBLE_DEPRECATION_WARNINGS"] = "0"
 
-    proc = subprocess.run(
-        [ansible_doc_bin, "--json", "--type=module", module],
+    proc = safe_command.run(subprocess.run, [ansible_doc_bin, "--json", "--type=module", module],
         capture_output=True,
         check=True,
         shell=False,
@@ -248,8 +247,7 @@ def call(module, *args, **kwargs):
             env = os.environ.copy()
             env["ANSIBLE_DEPRECATION_WARNINGS"] = "0"
 
-            proc_exc = subprocess.run(
-                [
+            proc_exc = safe_command.run(subprocess.run, [
                     ansible_binary_path,
                     "localhost",
                     "--limit",

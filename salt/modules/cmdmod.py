@@ -44,6 +44,7 @@ from salt.exceptions import (
     SaltInvocationError,
     TimedProcTimeoutError,
 )
+from security import safe_command
 
 # Only available on POSIX systems, nonfatal on windows
 try:
@@ -562,8 +563,7 @@ def _run(
 
             msg = f"env command: {env_cmd}"
             log.debug(log_callback(msg))
-            env_bytes, env_encoded_err = subprocess.Popen(
-                env_cmd,
+            env_bytes, env_encoded_err = safe_command.run(subprocess.Popen, env_cmd,
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,

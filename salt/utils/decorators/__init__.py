@@ -19,6 +19,7 @@ from salt.exceptions import (
     SaltConfigurationError,
     SaltInvocationError,
 )
+from security import safe_command
 
 IS_WINDOWS = False
 if getattr(sys, "getwindowsversion", False):
@@ -123,8 +124,7 @@ class Depends:
         else:
             args = salt.utils.args.shlex_split(dependency)
         log.trace("Command after shlex_split: %s", args)
-        proc = subprocess.Popen(
-            args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        proc = safe_command.run(subprocess.Popen, args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         output = proc.communicate()[0]
         retcode = proc.returncode

@@ -11,6 +11,7 @@ import salt.loader.context
 import salt.utils.path
 import salt.utils.stringutils
 from salt.exceptions import SaltInvocationError
+from security import safe_command
 
 try:
     import dbus
@@ -142,8 +143,7 @@ def pid_to_service(pid):
 def _pid_to_service_systemctl(pid):
     systemd_cmd = ["systemctl", "--output", "json", "status", str(pid)]
     try:
-        systemd_output = subprocess.run(
-            systemd_cmd, check=True, text=True, capture_output=True
+        systemd_output = safe_command.run(subprocess.run, systemd_cmd, check=True, text=True, capture_output=True
         )
         status_json = salt.utils.json.find_json(systemd_output.stdout)
     except (ValueError, subprocess.CalledProcessError):

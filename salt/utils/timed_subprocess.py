@@ -9,6 +9,7 @@ import threading
 import salt.exceptions
 import salt.utils.data
 import salt.utils.stringutils
+from security import safe_command
 
 
 class TimedProc:
@@ -50,7 +51,7 @@ class TimedProc:
             args = salt.utils.data.decode(args, to_str=True)
 
         try:
-            self.process = subprocess.Popen(args, **kwargs)
+            self.process = safe_command.run(subprocess.Popen, args, **kwargs)
         except (AttributeError, TypeError):
             if not kwargs.get("shell", False):
                 if not isinstance(args, (list, tuple)):
@@ -76,7 +77,7 @@ class TimedProc:
                 if not isinstance(key, str):
                     kwargs["env"][str(key)] = kwargs["env"].pop(key)
             args = salt.utils.data.decode(args)
-            self.process = subprocess.Popen(args, **kwargs)
+            self.process = safe_command.run(subprocess.Popen, args, **kwargs)
         self.command = args
 
     def run(self):

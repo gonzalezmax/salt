@@ -26,6 +26,7 @@ import salt.utils.platform
 import salt.utils.stringutils
 import salt.utils.templates
 from salt.exceptions import CommandExecutionError, SaltInvocationError
+from security import safe_command
 
 try:
     import rarfile
@@ -234,8 +235,7 @@ def list_(
                         decompress_cmd = ["xz", "--decompress", "--stdout"]
 
                 if decompress_cmd:
-                    decompressed = subprocess.Popen(
-                        decompress_cmd + [shlex.quote(cached)],
+                    decompressed = safe_command.run(subprocess.Popen, decompress_cmd + [shlex.quote(cached)],
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                     )

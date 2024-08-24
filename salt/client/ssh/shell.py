@@ -15,6 +15,7 @@ import salt.utils.json
 import salt.utils.nb_popen
 import salt.utils.path
 import salt.utils.vt
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ def gen_key(path):
     dirname = os.path.dirname(path)
     if dirname and not os.path.isdir(dirname):
         os.makedirs(os.path.dirname(path))
-    subprocess.call(cmd)
+    safe_command.run(subprocess.call, cmd)
 
 
 def gen_shell(opts, **kwargs):

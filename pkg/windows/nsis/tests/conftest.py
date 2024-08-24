@@ -6,6 +6,7 @@ import winreg
 
 import psutil
 import pytest
+from security import safe_command
 
 pytest_plugins = ["helpers_namespace"]
 
@@ -171,7 +172,7 @@ def old_install():
 
 @pytest.helpers.register
 def run_command(cmd):
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = safe_command.run(subprocess.run, cmd, capture_output=True, text=True)
     return result.stdout.strip().replace("/", "\\")
 
 

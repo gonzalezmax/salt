@@ -38,6 +38,7 @@ import salt.loader
 import salt.utils.event
 import salt.utils.process
 from salt.exceptions import CommandExecutionError
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -112,8 +113,7 @@ def start(cmd, output="json", interval=1, onchange=False):
 
     while True:
         try:
-            proc = subprocess.Popen(
-                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            proc = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
 
             log.debug("Starting script with pid %d", proc.pid)

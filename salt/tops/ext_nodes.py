@@ -51,6 +51,7 @@ import subprocess
 
 import salt.utils.platform
 import salt.utils.yaml
+from security import safe_command
 
 if salt.utils.platform.is_windows():
     from salt.utils.win_functions import escape_argument as _cmd_quote
@@ -75,8 +76,7 @@ def top(**kwargs):
     """
     if "id" not in kwargs["opts"]:
         return {}
-    proc = subprocess.run(
-        [
+    proc = safe_command.run(subprocess.run, [
             _cmd_quote(part)
             for part in shlex.split(
                 __opts__["master_tops"]["ext_nodes"],

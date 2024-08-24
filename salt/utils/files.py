@@ -22,6 +22,7 @@ import salt.utils.platform
 import salt.utils.stringutils
 from salt.exceptions import CommandExecutionError, FileLockError, MinionError
 from salt.utils.decorators.jinja import jinja_filter
+from security import safe_command
 
 try:
     import fcntl
@@ -177,7 +178,7 @@ def copyfile(source, dest, backup_mode="", cachedir=""):
         if policy == "Enforcing":
             with fopen(os.devnull, "w") as dev_null:
                 cmd = [rcon, dest]
-                subprocess.call(cmd, stdout=dev_null, stderr=dev_null)
+                safe_command.run(subprocess.call, cmd, stdout=dev_null, stderr=dev_null)
     if os.path.isfile(tgt):
         # The temp file failed to move
         __clean_tmp(tgt)

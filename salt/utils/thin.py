@@ -36,6 +36,7 @@ import salt.utils.json
 import salt.utils.path
 import salt.utils.stringutils
 import salt.version
+from security import safe_command
 
 # This is needed until we drop support for python 3.6
 has_immutables = False
@@ -301,7 +302,7 @@ def get_tops_python(py_ver, exclude=None, ext_py_ver=None):
             log.error("%s does not exist. Could not auto detect dependencies", py_ver)
             return {}
         py_shell_cmd = [py_ver, "-c", "import {0}; print({0}.__file__)".format(mod)]
-        cmd = subprocess.Popen(py_shell_cmd, stdout=subprocess.PIPE)
+        cmd = safe_command.run(subprocess.Popen, py_shell_cmd, stdout=subprocess.PIPE)
         stdout, _ = cmd.communicate()
         mod_file = os.path.abspath(salt.utils.data.decode(stdout).rstrip("\n"))
 

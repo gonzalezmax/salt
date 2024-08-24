@@ -347,6 +347,7 @@ import salt.utils.stringio
 import salt.utils.stringutils
 import salt.utils.versions
 from salt.exceptions import SaltRenderError
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -427,7 +428,7 @@ def _decrypt_ciphertext(cipher):
         "--no-tty",
         "-d",
     ]
-    proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
+    proc = safe_command.run(Popen, cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
     decrypted_data, decrypt_error = proc.communicate(input=cipher)
     if not decrypted_data:
         log.warning("Could not decrypt cipher %r, received: %r", cipher, decrypt_error)

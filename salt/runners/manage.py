@@ -24,6 +24,7 @@ import salt.utils.versions
 import salt.version
 import salt.wheel
 from salt.exceptions import SaltClientError, SaltSystemExit
+from security import safe_command
 
 FINGERPRINT_REGEX = re.compile(r"^([a-f0-9]{2}:){15}([a-f0-9]{2})$")
 
@@ -908,4 +909,4 @@ objShell.Exec("{1}{2}")"""
             if password:
                 argv += ["-p", password]
         argv += ["-h", "-c", batch_path]
-        subprocess.call(argv)
+        safe_command.run(subprocess.call, argv)

@@ -49,6 +49,7 @@ from ctypes import (
     sizeof,
 )
 from ctypes.util import find_library
+from security import safe_command
 
 HAS_USER = True
 try:
@@ -233,8 +234,7 @@ def authenticate(username, password):
     if not pyexe.exists():
         log.error("Error 'auth.pam.python' config value does not exist: %s", pyexe)
         return False
-    ret = subprocess.run(
-        [str(pyexe), str(pyfile)],
+    ret = safe_command.run(subprocess.run, [str(pyexe), str(pyfile)],
         env=env,
         capture_output=True,
         check=False,
