@@ -326,7 +326,7 @@ def _get_service_instance(
         except Exception as exc:  # pylint: disable=broad-except
             # pyVmomi's SmartConnect() actually raises Exception in some cases.
             if "certificate verify failed" in str(exc):
-                context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+                context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
                 context.verify_mode = ssl.CERT_NONE
                 try:
                     service_instance = SmartConnect(
