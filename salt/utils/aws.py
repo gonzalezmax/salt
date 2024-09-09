@@ -25,6 +25,7 @@ import requests
 import salt.config
 import salt.utils.hashutils
 import salt.utils.xmlutil as xml
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +83,7 @@ def get_metadata(path, refresh_token_if_needed=True):
         headers["X-aws-ec2-metadata-token"] = __IMDS_Token__
 
     # Connections to instance meta-data must fail fast and never be proxied
-    result = requests.get(
+    result = safe_requests.get(
         f"http://169.254.169.254/latest/{path}",
         proxies={"http": ""},
         headers=headers,
@@ -512,7 +513,7 @@ def query(
         log.debug("AWS Request: %s", requesturl)
         log.trace("AWS Request Parameters: %s", params_with_headers)
         try:
-            result = requests.get(
+            result = safe_requests.get(
                 requesturl,
                 headers=headers,
                 params=params_with_headers,

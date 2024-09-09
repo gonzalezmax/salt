@@ -27,6 +27,7 @@ from setuptools.command.bdist_egg import bdist_egg
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 from setuptools.command.sdist import sdist
+from security import safe_requests
 
 # pylint: enable=no-name-in-module
 
@@ -463,9 +464,8 @@ class CloudSdist(Sdist):  # pylint: disable=too-many-ancestors
             )
 
             try:
-                import requests
 
-                req = requests.get(url, timeout=120)
+                req = safe_requests.get(url, timeout=120)
                 if req.status_code == 200:
                     script_contents = req.text.encode(req.encoding)
                 else:
