@@ -98,7 +98,7 @@ def _freebsd_geom():
         tmp = {}
         for line in device.split("\n"):
             for attrib in _geom_attribs:
-                search = re.search(rf"{attrib}:\s(.*)", line)
+                search = re.search(rf"{attrib}:\s(.*)", line) 
                 if search:
                     value = _datavalue(
                         _geomconsts._datatypes.get(attrib), search.group(1)
